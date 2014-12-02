@@ -1,0 +1,4 @@
+*.o
+windows/Debug/*
+windows/dinocvLib/Debug/*
+windows/main/Debug/*
