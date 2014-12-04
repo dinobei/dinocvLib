@@ -1,16 +1,7 @@
 #include "../common/def_os_selector_export.h"
 #include "yuv422anal.h"
 
-void Yuv2Rgb(int Y, int U, int V, int *R, int *G, int *B)
-{
-	*B = ( 76284*(Y-16)                 + 132252*(U-128) ) >> 16;
-	*G = ( 76284*(Y-16) - 53281*(V-128) - 25625*(U-128) ) >> 16 ;
-	*R = ( 76284*(Y-16) + 104595*(V-128) ) >> 16 ;
 
-	*B = d_clp(*B);
-	*G = d_clp(*G);
-	*R = d_clp(*R);
-}
 
 IMAGE_D *_dinocv_yuv422_read(char *filename, SIZE_D *size)
 {
@@ -47,12 +38,12 @@ IMAGE_D *_dinocv_yuv422_read(char *filename, SIZE_D *size)
 		y2 = yuv_src[i+2];
 		v = yuv_src[i+3];
 		
-		Yuv2Rgb(y1, u, v, &r, &g, &b);
+		dinocv_conv_yuv2rgb(y1, u, v, &r, &g, &b);
 		rgb_src[j] = (uchar_d)b;
 		rgb_src[j+1] = (uchar_d)g;
 		rgb_src[j+2] = (uchar_d)r;
 
-		Yuv2Rgb(y1, u, v, &r, &g, &b);
+		dinocv_conv_yuv2rgb(y1, u, v, &r, &g, &b);
 		rgb_src[j+3] = (uchar_d)b;
 		rgb_src[j+4] = (uchar_d)g;
 		rgb_src[j+5] = (uchar_d)r;
@@ -63,4 +54,3 @@ IMAGE_D *_dinocv_yuv422_read(char *filename, SIZE_D *size)
 
 	return img;
 }
-

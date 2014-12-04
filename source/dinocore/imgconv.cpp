@@ -172,7 +172,7 @@ void dinocv_conv_yuv2rgb(int y, int u, int v, int *r, int *g, int *b)
 	*r = d_clp(*r);
 }
 
-void dinocv_conv_rgb2yuv_0_255(int r, int g, int b, int *y, int *u, int *v)
+void dinocv_conv_rgb2yuv(int r, int g, int b, int *y, int *u, int *v)
 {
 	*y = (int)(0.257*r + 0.504*g + 0.098*b + 16);
 	*u = (int)(-0.148*r - 0.291*g + 0.439*b + 128);

@@ -155,8 +155,7 @@ extern "C" DINOBEI_DLLTYPE
 #if defined(_WIN32)
 extern "C" DINOBEI_DLLTYPE
 #endif
-	void dinocv_conv_rgb2yuv_0_255(int r, int g, int b, int *y, int *u, int *v);
-
+	void dinocv_conv_rgb2yuv(int r, int g, int b, int *y, int *u, int *v);
 
 /* Example
 int main(int argc, char* argv[]) {

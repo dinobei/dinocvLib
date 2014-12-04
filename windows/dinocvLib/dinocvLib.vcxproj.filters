@@ -5,9 +5,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="common">
-      <UniqueIdentifier>{be205613-47c1-4501-b906-5bff9ec9dff9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="dinocore">
       <UniqueIdentifier>{b7b86a1d-7597-4e22-9abe-d07960aacef2}</UniqueIdentifier>
     </Filter>
@@ -20,14 +17,17 @@
     <Filter Include="dinoproc">
       <UniqueIdentifier>{aed59a7d-e4a9-4c36-9f10-d3efb170284c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dinocore\common">
+      <UniqueIdentifier>{be205613-47c1-4501-b906-5bff9ec9dff9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\dinocvlib.h" />
     <ClInclude Include="..\..\source\common\def_os_selector_export.h">
-      <Filter>common</Filter>
+      <Filter>dinocore\common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\common\def_os_selector_header.h">
-      <Filter>common</Filter>
+      <Filter>dinocore\common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\dinocore\bmpanal.h">
       <Filter>dinocore</Filter>
