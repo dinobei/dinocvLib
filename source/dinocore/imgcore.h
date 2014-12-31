@@ -31,6 +31,7 @@ typedef long					long_d;
 #define d_rounddown(x) (long(x))
 #define d_roundup(x) (long((x)>0?(x)+1:(x)-1))
 #define d_clp(x) (((x)>255) ? 255 : ( ((x)< 0) ? 0 : (x)))
+#define d_clp_boundary(x, low, high) (((int)(x)>(int)(high)) ? (int)(high) : ( ((int)(x)< (int)(low)) ? (int)(low) : (int)(x)))
 #define pixel_width(img) (img->width*(img->bpp>>3))		// real width pixel length in bitmap saving
 #define d_get_1d_source(src_2dim)				((void *)(src_2dim[0]))
 

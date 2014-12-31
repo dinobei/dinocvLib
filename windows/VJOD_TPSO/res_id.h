@@ -1,0 +1,30 @@
+#ifndef __RES_ID_H__
+#define __RES_ID_H__
+
+#define ID_BTNSETTING				5002
+#define ID_BTNSTART					5003
+#define ID_BTNEND					5004
+#define	ID_BTNDOWNSTAGE				5005
+#define ID_BTNUPSTAGE				5006
+#define ID_STATICSTAGE				5007
+#define ID_RBTN_SWO					5008
+#define ID_RBTN_PSO					5009
+#define ID_STATIC_PROC_TIME			5010
+#define ID_BTN_N_PARTICLES_UP		5011
+#define ID_BTN_N_PARTICLES_DOWN		5012
+#define ID_STATIC_NUM_PARTICLES		5013
+#define ID_BTN_N_STAGES_DOWN		5014
+#define ID_BTN_N_STAGES_UP			5015
+#define ID_STATIC_NUM_STAGES		5016
+#define ID_LST_MODEL_LIST			5017
+#define ID_BTN_MODEL_DELETE			5018
+#define ID_EDIT_RED					5019
+#define ID_EDIT_GREEN				5020
+#define ID_EDIT_BLUE				5021
+#define ID_EDIT_THICK				5022
+#define ID_EDIT_MAG_LR				5023
+#define ID_EDIT_MAG_TB				5024
+#define ID_BTN_MAG_APPLY			5025
+#define ID_BTN_RGB_APPLY			5026
+
+#endif

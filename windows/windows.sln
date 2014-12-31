@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dinocvLib", "dinocvLib\dino
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "main", "main\main.vcxproj", "{AFB3B1CB-F902-48DE-9605-88EFB5B69D16}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VJOD_TPSO", "VJOD_TPSO\VJOD_TPSO.vcxproj", "{B6655FD8-38CD-4BC4-AF2D-7033AB14B719}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{AFB3B1CB-F902-48DE-9605-88EFB5B69D16}.Debug|Win32.Build.0 = Debug|Win32
 		{AFB3B1CB-F902-48DE-9605-88EFB5B69D16}.Release|Win32.ActiveCfg = Release|Win32
 		{AFB3B1CB-F902-48DE-9605-88EFB5B69D16}.Release|Win32.Build.0 = Release|Win32
+		{B6655FD8-38CD-4BC4-AF2D-7033AB14B719}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B6655FD8-38CD-4BC4-AF2D-7033AB14B719}.Debug|Win32.Build.0 = Debug|Win32
+		{B6655FD8-38CD-4BC4-AF2D-7033AB14B719}.Release|Win32.ActiveCfg = Release|Win32
+		{B6655FD8-38CD-4BC4-AF2D-7033AB14B719}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
