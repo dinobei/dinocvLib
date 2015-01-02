@@ -197,8 +197,8 @@ void _dinocv_draw_rect_bmp24_2(IMAGE_D *img, RECT_D *rect, COLOR_D *color, int t
 	
 	left = rect->left < 0 ? 0 : rect->left;
 	top  = rect->top < 0 ? 0 : rect->top;
-	right = rect->right >=  img->width ? img->width-1 : rect->right;
-	bottom = rect->bottom >= img->height ? img->height-1 : rect->bottom;
+	right = rect->right >=  (int)img->width ? (int)img->width-1 : rect->right;
+	bottom = rect->bottom >= (int)img->height ? (int)img->height-1 : rect->bottom;
 	r = color->r;
 	g = color->g;
 	b = color->b;
@@ -206,8 +206,8 @@ void _dinocv_draw_rect_bmp24_2(IMAGE_D *img, RECT_D *rect, COLOR_D *color, int t
 
 	/* 중복된 곳을 그리지 않으려고, 즉 속도 향상을 위한 조건검사 */
 	if(top <= bottom &&
-		d_limit_cc(top, 0, img->height) &&
-		d_limit_cc(bottom, 0, img->height))
+		d_limit_co(top, 0, img->height) &&
+		d_limit_co(bottom, 0, img->height))
 	{
 		for(i = left*3 ; i <= right*3 ; i+=3)
 		{
@@ -222,8 +222,8 @@ void _dinocv_draw_rect_bmp24_2(IMAGE_D *img, RECT_D *rect, COLOR_D *color, int t
 	}
 
 	if(left <= right &&
-		d_limit_cc(left, 0, img->width) &&
-		d_limit_cc(right, 0, img->width))
+		d_limit_co(left, 0, img->width) &&
+		d_limit_co(right, 0, img->width))
 	{
 		for(i = top ; i <= bottom ; i++)
 		{

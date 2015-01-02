@@ -18,20 +18,15 @@ using namespace std;
 #define SWARM_COEFFICIENT			1.7
 
 // Tracking-PSO Parameters
-#define TPSO_SEARCH_AREA_LEFT		150
-#define TPSO_SEARCH_AREA_TOP		150
-#define TPSO_SEARCH_AREA_RIGHT		150
-#define TPSO_SEARCH_AREA_BOTTOM		150
-
 #define MAX_TRACKING_LENGTH			640>>3
-#define CANDIDATE_MISS_MAX			3
-#define TRACKING_MISS_MAX			5
+#define CANDIDATE_MISS_MAX			30
+#define TRACKING_MISS_MAX			10
 
 
 // for Tracking
-#define CANDIDATE_CNT_MAX			5
-#define TRACKING_LENGTH_ARR_MAX		15
-#define TRACKING_POS_ARR_MAX		10
+#define CANDIDATE_CNT_MAX			3
+#define TRACKING_LENGTH_ARR_MAX		5
+#define TRACKING_POS_ARR_MAX		3
 
 typedef struct
 {
@@ -167,6 +162,8 @@ typedef struct TRACKING_OBJECT
 	int len_division_cnt;
 	int pos_division_cnt;
 	int x_sum, y_sum, w_sum, h_sum;
+	int cur_x;
+	int cur_y;
 }TRACKING_OBJECT;
 
 

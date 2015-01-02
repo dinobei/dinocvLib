@@ -149,24 +149,24 @@ LRESULT CALLBACK CallbackOnFrame(HWND hWnd, LPVIDEOHDR lpVHdr)
 			result_rt_cnt = cd[iter]->merged_detection_result->n_objects <= 1 ? cd[iter]->detection_result->n_objects :
 				cd[iter]->merged_detection_result->n_objects;
 				
-			int success_track=0;
+			double min_length = MAX_TRACKING_LENGTH;
 			for(int i = 0 ; i < result_rt_cnt ; i++)
 			{
 				int x2 = (result_rt_arr[i].left+result_rt_arr[i].right)>>1;
 				int y2 = (result_rt_arr[i].top+result_rt_arr[i].bottom)>>1;
 
 				double length = sqrt(pow(co->x-x2, 2)+pow(co->y-y2, 2) );
-				if(length < MAX_TRACKING_LENGTH)
+				if(length < min_length)
 				{
+					min_length = length;			 
 					co->x = x2;
 					co->y = y2;
 					co->w = (result_rt_arr[i].right - result_rt_arr[i].left);
 					co->h = (result_rt_arr[i].bottom - result_rt_arr[i].top);
 					co->detection_cnt++;
-					success_track=1;
 				}
 			}
-			if(!success_track)
+			if(min_length == MAX_TRACKING_LENGTH)
 			{
 				if(++co->miss_cnt > CANDIDATE_MISS_MAX)
 				{
@@ -221,15 +221,16 @@ LRESULT CALLBACK CallbackOnFrame(HWND hWnd, LPVIDEOHDR lpVHdr)
 			result_rt_cnt = cd[iter]->merged_detection_result->n_objects == 0 ? cd[iter]->detection_result->n_objects :
 				cd[iter]->merged_detection_result->n_objects;
 
-			int success_track=0;
+			double min_length = MAX_TRACKING_LENGTH;
 			for(int i = 0 ; i < result_rt_cnt ; i++)
 			{
 				int x2 = (result_rt_arr[i].left + result_rt_arr[i].right)>>1;
 				int y2 = (result_rt_arr[i].top + result_rt_arr[i].bottom)>>1;
 
 				double length = sqrt(pow(TO_GET_AVG_X(to)-x2, 2)+pow(TO_GET_AVG_Y(to)-y2, 2) );
-				if(length < MAX_TRACKING_LENGTH)
+				if(length < min_length)
 				{
+					min_length = length;
 					// delete previous value
 					to->x_sum -= to->x_arr[to->pos_cidx];
 					to->y_sum -= to->y_arr[to->pos_cidx];
@@ -249,11 +250,11 @@ LRESULT CALLBACK CallbackOnFrame(HWND hWnd, LPVIDEOHDR lpVHdr)
 
 					to->miss_cnt=0;
 
-
-					success_track=1;
+					to->cur_x = x2;
+					to->cur_y = y2;
 				}
 			}
-			if(!success_track)
+			if(min_length == MAX_TRACKING_LENGTH)
 			{
 				if(++to->miss_cnt > TRACKING_MISS_MAX)
 				{
@@ -261,11 +262,72 @@ LRESULT CALLBACK CallbackOnFrame(HWND hWnd, LPVIDEOHDR lpVHdr)
 					printf(" - tracking object deleted..(%d)\n", tracking_list[iter]->cnt);
 				}
 			}
-		}		
+		}
+
+		tc = tracking_list[iter]->cnt;
+		for(int ti = 0 ; ti < tc-1 ; ti++)
+		{
+			for(int ti2 = ti+1 ; ti2 < tc ; ti2++)
+			{
+				if(ti != ti2)
+				{
+					TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tracking_list[iter], ti);
+					if(to->cur_x > 0)
+					{
+						TRACKING_OBJECT *to2 = (TRACKING_OBJECT *)soc_list_get_idx_data(tracking_list[iter], ti2);
+					
+						if(to2->cur_x > 0 &&
+							d_limit_cc(to->cur_x / to2->cur_x, 0.8, 1.2) &&
+							d_limit_cc(to->cur_y / to2->cur_y, 0.8, 1.2))
+						{
+							to2->cur_x = -1;
+						}
+					}
+				}
+			}
+		}
+		for(int ti = tc-1 ; ti >= 0 ; ti--)
+		{
+			TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tracking_list[iter], ti);
+			if(to->cur_x < 0)
+				free((TRACKING_OBJECT *)soc_list_del_idx_data(tracking_list[iter], ti));
+		}
 		
 		// Add Candidate List
 		if(isPSO)
 		{
+			// Swipe CO & TO Area
+			tc = tracking_list[iter]->cnt;
+			for(int ti = 0 ; ti < tc ; ti++)
+			{
+				TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tracking_list[iter], ti);
+				int t = (uint_d)(TO_GET_AVG_Y(to)-((TO_GET_AVG_H(to)>>1)));
+				int b = (uint_d)(TO_GET_AVG_Y(to)+((TO_GET_AVG_H(to)>>1)));
+				int l = (uint_d)(TO_GET_AVG_X(to)-((TO_GET_AVG_W(to)>>1)));
+				int w = (uint_d)(TO_GET_AVG_W(to));
+				if(t < 0) t = 0;
+				if(b > _gimg->height) b = _gimg->height;
+				for(t ; t < b ; t++)
+				{
+					memset(&_ggray->source[t][l], 0, sizeof(uchar_d) * w);
+				}
+			}
+
+			cc = candidate_list[iter]->cnt;
+			for(int ci = 0 ; ci < cc ; ci++)
+			{
+				CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)soc_list_get_idx_data(candidate_list[iter], ci);
+				int t = co->y-(co->h>>1);
+				int b = co->y+(co->h>>1);
+				int l = co->x-(co->w>>1);
+				int w = co->w;
+				for(t ; t < b ; t++)
+				{
+					memset(&_ggray->source[t][l], 0, sizeof(uchar_d) * w);
+				}
+			}
+
+
 			cascaded_classify_with_pso(cd[iter], &dinocv_set_rect(0, 0, _ggray->width, _ggray->height),
 				_ggray, ii, _global_particles[iter], _global_stage[iter]);
 		}
@@ -349,6 +411,9 @@ LRESULT CALLBACK CallbackOnFrame(HWND hWnd, LPVIDEOHDR lpVHdr)
 	// display rect
 	if(isPSO) // PSO Scanning
 	{
+		//IMAGE_D *timg = dinocv_conv_8to24(_ggray);
+		//dinocv_copy_image_cpy(_gimg, timg);
+		//dinocv_release_image(timg);
 		for(int iter = 0 ; iter < _gNumberOfModel ; iter++)
 		{
 			for(int j = 0 ; j < tracking_list[iter]->cnt ; j++)
@@ -356,14 +421,34 @@ LRESULT CALLBACK CallbackOnFrame(HWND hWnd, LPVIDEOHDR lpVHdr)
 				TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tracking_list[iter], j);
 
 				dinocv_draw_rect(_gimg, &dinocv_set_rect(
-					TO_GET_AVG_X(to)-((TO_GET_AVG_W(to)>>1))*cd[iter]->lr ,
-					TO_GET_AVG_Y(to)-((TO_GET_AVG_H(to)>>1))*cd[iter]->tb ,
-					TO_GET_AVG_X(to)+((TO_GET_AVG_W(to)>>1))*cd[iter]->lr ,
-					TO_GET_AVG_Y(to)+((TO_GET_AVG_H(to)>>1))*cd[iter]->tb
+					(uint_d)(TO_GET_AVG_X(to)-((TO_GET_AVG_W(to)>>1))*cd[iter]->lr) ,
+					(uint_d)(TO_GET_AVG_Y(to)-((TO_GET_AVG_H(to)>>1))*cd[iter]->tb) ,
+					(uint_d)(TO_GET_AVG_X(to)+((TO_GET_AVG_W(to)>>1))*cd[iter]->lr) ,
+					(uint_d)(TO_GET_AVG_Y(to)+((TO_GET_AVG_H(to)>>1))*cd[iter]->tb)
 					),
 					&cd[iter]->color, cd[iter]->thick);
 			}
 		}
+
+		/*
+		for(int iter = 0 ; iter <_gNumberOfModel ; iter++)
+		{
+			for(int j = 0 ; j < candidate_list[iter]->cnt ; j++)
+			{
+				CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)soc_list_get_idx_data(candidate_list[iter], j);
+
+				float rate = (float)co->detection_cnt/CANDIDATE_CNT_MAX;
+				dinocv_draw_rect(_gimg, &dinocv_set_rect(
+					co->x-(co->w>>1) * cd[iter]->lr,
+					co->y-(co->h>>1) * cd[iter]->tb,
+					co->x+(co->w>>1) * cd[iter]->lr,
+					co->y+(co->h>>1) * cd[iter]->tb
+					),
+					&dinocv_set_color(rate*255, 0, 0), cd[iter]->thick);
+				
+			}
+		}
+		*/
 	}
 	else // SWO Scanning
 	{
