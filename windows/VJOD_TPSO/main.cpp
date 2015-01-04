@@ -1015,10 +1015,18 @@ BOOL CALLBACK SettingDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lPa
 
 			// Detection Start
 			if(capSetCallbackOnFrame(hCaptureWindow, CallbackOnFrame) == FALSE)
-				return false;
+			{
+				MessageBox(hWndMain, TEXT("capSetCallbackOnFrame failed\n"), TEXT("Can't set callback on frame"), MB_OK);
+				EndDialog(hDlg, IDOK);
+				return FALSE;
+			}
 
 			if(capDriverConnect(hCaptureWindow, 0) == FALSE)
+			{
+				MessageBox(hWndMain, TEXT("capDriverConnect failed\n"), TEXT("Can't connect driver"), MB_OK);
+				EndDialog(hDlg, IDOK);
 				return FALSE;
+			}
 			
 			capPreviewRate(hCaptureWindow, 30);
 			capOverlay(hCaptureWindow, false);
