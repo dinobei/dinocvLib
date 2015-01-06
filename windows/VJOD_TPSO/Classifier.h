@@ -194,7 +194,7 @@ int cascaded_classifier(CASCADED_DETECTOR_D *cd, int x, int y, int **ii, int sf_
 void cascaded_classify(CASCADED_DETECTOR_D *cd, IMAGE_D *img, int **ii);
 int **make_integral_image(IMAGE_D *img);
 
-void merge_rect(CASCADED_DETECTOR_D *cd);
+void merge_rect(CASCADED_DETECTOR_D *cd, int n_objects);
 
 // PSO
 void cascaded_classify_with_pso(CASCADED_DETECTOR_D *cd, RECT_D *rt, IMAGE_D *img, int **ii, int num_particles, int num_stage);

@@ -441,9 +441,8 @@ void cascaded_classify(CASCADED_DETECTOR_D *cd, IMAGE_D *img, int **ii)
 
 	cd->detection_result->n_objects = n_objects;
 
-	/**/
-	if(n_objects >= 2)
-		merge_rect(cd);
+
+	merge_rect(cd, n_objects);
 	
 	return;
 }
@@ -479,9 +478,8 @@ int **make_integral_image(IMAGE_D *img)
 	return iimg;
 }
 
-void merge_rect(CASCADED_DETECTOR_D *cd)
+void merge_rect(CASCADED_DETECTOR_D *cd, int n_objects)
 {
-	int n_objects = cd->detection_result->n_objects;
 	register int i, j;
 	int *labels, *counter;
 	int group_id=0;
@@ -490,6 +488,12 @@ void merge_rect(CASCADED_DETECTOR_D *cd)
 
 	RECT_D *prt = cd->detection_result->p_rt;
 	RECT_D *r_prt = cd->merged_detection_result->p_rt;
+
+	if(n_objects <= 1)
+	{
+		memcpy(r_prt, prt, sizeof(RECT_D) * cd->detection_result->n_objects);
+		cd->merged_detection_result->n_objects = cd->detection_result->n_objects;
+	}
 
 
 	labels = (int *)malloc(sizeof(int)*n_objects);
@@ -610,8 +614,8 @@ void cascaded_classify_with_pso(CASCADED_DETECTOR_D *cd, RECT_D *rt, IMAGE_D *im
 
 
 	/**/
-	if(n_objects > 1)
-		merge_rect(cd);
+	//if(n_objects > 1)
+		merge_rect(cd, n_objects);
 }
 
 int cascaded_classifier_with_pso(CASCADED_DETECTOR_D *cd, int x, int y, int **ii, int sf_idx)
