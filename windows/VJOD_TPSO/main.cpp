@@ -57,31 +57,16 @@ HWND hBtnSetting, hBtnDownStage, hBtnUpStage,
 	hModelList,
 	hStaticRed, hStaticGreen, hStaticBlue, hStaticThick;
 
+RECT _grt; // for fps display
+RECT _grt_particles; // for number of particles display
+RECT _grt_stages; // for number of stages display
+
+
+
 bool isPSO;
 TCHAR proc_time[50];
 int _gCurrentSelectModel=-1;
 int _gNumberOfModel;
-
-typedef struct od_parameters od_parameters;
-struct od_parameters{
-	char model_file_name[_MAX_PATH];
-	int subwindow_width;
-	int subwindow_height;
-	int classification_methods;
-	float scale_factor;
-	int initial_scale_factor_index;
-};
-
-typedef struct CANDIDATE_OBJECT CANDIDATE_OBJECT;
-struct CANDIDATE_OBJECT
-{
-	int detection_cnt;
-	int x, y, w, h;
-	int miss_cnt;
-};
-
-
-
 
 od_parameters _godparm;
 
@@ -92,9 +77,6 @@ int cpt=0;
 int npt=0;
 int total_time=0;
 float avg_time;
-RECT _grt; // for fps display
-RECT _grt_particles; // for number of particles display
-RECT _grt_stages; // for number of stages display
 
 int _global_particles[NUMBER_OF_MODELS];
 int _global_stage[NUMBER_OF_MODELS];
@@ -102,277 +84,15 @@ int _global_stage[NUMBER_OF_MODELS];
 LIST_D *tracking_list[NUMBER_OF_MODELS];
 LIST_D *candidate_list[NUMBER_OF_MODELS];
 
-void candidate_list_update(CASCADED_DETECTOR_D *cd, LIST_D *cl, LIST_D *tl, int **ii, int n_particles, int n_stages)
-{
-	RECT_D *result_rt_arr;
-	int x, y;
 
-	int cc = cl->cnt;
-	for(int ci = cc-1 ; ci >= 0 ; ci--)
-	{
-		// Searching Area with PSO & Renewing data (if exist, miss_cnt++, else detection_cnt++)
-		CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)soc_list_get_idx_data(cl, ci);
-		cascaded_classify_with_pso(cd,
-			&dinocv_set_rect(
-			(UINT)d_clp_boundary(co->x-co->w, 0, _ggray->width-1), (UINT)d_clp_boundary(co->y-co->h, 0, _ggray->height-1),
-			(UINT)d_clp_boundary(co->x+co->w, 0, _ggray->width-1), (UINT)d_clp_boundary(co->y+co->h, 0, _ggray->height-1)
-			),
-			_ggray, ii, n_particles, n_stages);
-
-		result_rt_arr = cd->merged_detection_result->p_rt;
-
-		double min_length = MAX_TRACKING_LENGTH;
-		for(int i = 0 ; i < cd->merged_detection_result->n_objects ; i++)
-		{
-			x = (result_rt_arr[i].left+result_rt_arr[i].right)>>1;
-			y = (result_rt_arr[i].top+result_rt_arr[i].bottom)>>1;
-
-			double length = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
-			//length = ( d_abs(co->x-x) + d_abs(co->y-y) ) >> 1;
-			if(length < min_length)
-			{
-				min_length = length;
-				co->x = x;
-				co->y = y;
-				co->w = (result_rt_arr[i].right - result_rt_arr[i].left);
-				co->h = (result_rt_arr[i].bottom - result_rt_arr[i].top);
-				co->detection_cnt++;
-			}
-		}
-		if(min_length >= MAX_TRACKING_LENGTH)
-		{
-			if(++co->miss_cnt > CANDIDATE_MISS_MAX)
-			{
-				free((CANDIDATE_OBJECT *)soc_list_del_idx_data(cl, ci));
-				printf("\t - candidate object deleted..(%d)\n", cl->cnt);
-			}
-		}
-		else if(co->detection_cnt >= CANDIDATE_CNT_MAX) // send to tracking list (detection_cnt >= CANDIDATE_CNT_MAX)
-		{
-			// remove overlapping object
-			CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)soc_list_del_idx_data(cl, ci);
-			TRACKING_OBJECT *to = (TRACKING_OBJECT *)malloc(sizeof(TRACKING_OBJECT));
-			memset(to, 0, sizeof(TRACKING_OBJECT));
-			to->x_sum = to->x_arr[0] = co->x;
-			to->y_sum = to->y_arr[0] = co->y;
-			to->w_sum = to->w_arr[0] = co->w;
-			to->h_sum = to->h_arr[0] = co->h;
-			to->pos_cidx = 1;
-			to->length_cidx = 1;
-
-			to->len_division_cnt=1;
-			to->pos_division_cnt=1;
-
-			free(co);
-
-			soc_list_add_head(tl, to);
-
-			printf(" + tracking object added..(%d), and current candidate object is (%d)\n", tl->cnt, cl->cnt);
-
-		}
-	}
-}
-
-void tracking_list_update(CASCADED_DETECTOR_D *cd, LIST_D *cl, LIST_D *tl, int **ii, int n_particles, int n_stages)
-{
-	RECT_D *result_rt_arr = cd->merged_detection_result->p_rt;
-	double min_length;
-	int x, y;
-
-	for(int ti = tl->cnt-1 ; ti >= 0 ; ti--)
-	{
-		// Searching Area with PSO & Renewing data (if exist, miss_cnt++, else detection_cnt++)
-		TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-		cascaded_classify_with_pso(cd,
-			&dinocv_set_rect(
-			d_clp_boundary(TO_GET_AVG_X(to) - TO_GET_AVG_W(to), 0, _ggray->width-1), d_clp_boundary(TO_GET_AVG_Y(to) - TO_GET_AVG_H(to), 0, _ggray->height-1),
-			d_clp_boundary(TO_GET_AVG_X(to) + TO_GET_AVG_W(to), 0, _ggray->width-1), d_clp_boundary(TO_GET_AVG_Y(to) + TO_GET_AVG_H(to), 0, _ggray->height-1)
-			),
-			_ggray, ii, n_particles, n_stages);
-
-		min_length = MAX_TRACKING_LENGTH;
-		for(int i = 0 ; i < cd->merged_detection_result->n_objects ; i++)
-		{
-			x = (result_rt_arr[i].left + result_rt_arr[i].right)>>1;
-			y = (result_rt_arr[i].top + result_rt_arr[i].bottom)>>1;
-
-			double length = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
-			if(length < min_length)
-			{
-				min_length = length;
-				// delete previous value
-				to->x_sum -= to->x_arr[to->pos_cidx];
-				to->y_sum -= to->y_arr[to->pos_cidx];
-				to->w_sum -= to->w_arr[to->length_cidx];
-				to->h_sum -= to->h_arr[to->length_cidx];
-
-				// add current result to array
-				to->x_sum += to->x_arr[to->pos_cidx] = x;
-				to->y_sum += to->y_arr[to->pos_cidx] = y;
-				to->w_sum += to->w_arr[to->length_cidx] = (result_rt_arr[i].right - result_rt_arr[i].left);
-				to->h_sum += to->h_arr[to->length_cidx] = (result_rt_arr[i].bottom - result_rt_arr[i].top);
-
-				if(to->len_division_cnt < TRACKING_LENGTH_ARR_MAX) to->len_division_cnt++;
-				if(to->pos_division_cnt < TRACKING_POS_ARR_MAX) to->pos_division_cnt++;
-				to->length_cidx = (++to->length_cidx) % TRACKING_LENGTH_ARR_MAX;
-				to->pos_cidx = (++to->pos_cidx) % TRACKING_POS_ARR_MAX;
-
-				to->miss_cnt=0;
-
-				to->cur_x = x;
-				to->cur_y = y;
-			}
-		}
-		if(min_length == MAX_TRACKING_LENGTH)
-		{
-			if(++to->miss_cnt > TRACKING_MISS_MAX)
-			{
-				free((TRACKING_OBJECT *)soc_list_del_idx_data(tl, ti));
-				printf(" - tracking object deleted..(%d)\n", tl->cnt);
-			}
-		}
-	}
-
-	for(int ti = 0 ; ti < tl->cnt-1 ; ti++)
-	{
-		for(int ti2 = ti+1 ; ti2 < tl->cnt ; ti2++)
-		{
-			if(ti != ti2)
-			{
-				TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-				if(to->cur_x > 0)
-				{
-					TRACKING_OBJECT *to2 = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti2);
-
-					if(to2->cur_x > 0 &&
-						d_limit_cc(to->cur_x / to2->cur_x, 0.8, 1.2) &&
-						d_limit_cc(to->cur_y / to2->cur_y, 0.8, 1.2))
-					{
-						to2->cur_x = -1;
-					}
-				}
-			}
-		}
-	}
-	for(int ti = tl->cnt-1 ; ti >= 0 ; ti--)
-	{
-		TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-		if(to->cur_x < 0)
-			free((TRACKING_OBJECT *)soc_list_del_idx_data(tl, ti));
-	}
-}
-void push_candidate(LIST_D *cl, RECT_D *rt)
-{
-	// push candidate list
-	CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)malloc(sizeof(CANDIDATE_OBJECT));
-	memset(co, 0, sizeof(CANDIDATE_OBJECT));
-	co->x = (rt->left + rt->right)>>1;
-	co->y = (rt->top + rt->bottom)>>1;
-	co->w = rt->right - rt->left;
-	co->h = rt->bottom - rt->top;
-	co->detection_cnt++;
-	soc_list_add_head(cl, (void *)co);
-	printf("\t + candidate object added..(%d)\n", cl->cnt);
-}
-
-void candidate_add(CASCADED_DETECTOR_D *cd, LIST_D *cl, LIST_D *tl, int **ii, int n_particles, int n_stages)
-{
-	RECT_D *result_rt_arr;
-	int x, y;
-
-	// Swipe TO Area
-	for(int ti = 0 ; ti < tl->cnt ; ti++)
-	{
-		TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-		int t = (uint_d)(TO_GET_AVG_Y(to)-((TO_GET_AVG_H(to)>>1)));
-		int b = (uint_d)(TO_GET_AVG_Y(to)+((TO_GET_AVG_H(to)>>1)));
-		int l = (uint_d)(TO_GET_AVG_X(to)-((TO_GET_AVG_W(to)>>1)));
-		int w = (uint_d)(TO_GET_AVG_W(to));
-		if(t < 0) t = 0;
-		if(b > _gimg->height) b = _gimg->height;
-		for(t ; t < b ; t++)
-		{
-			memset(&_ggray->source[t][l], 0, sizeof(uchar_d) * w);
-		}
-	}
-
-	// Swipe CO Area
-	for(int ci = 0 ; ci < cl->cnt ; ci++)
-	{
-		CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)soc_list_get_idx_data(cl, ci);
-		int t = co->y-(co->h>>1);
-		int b = co->y+(co->h>>1);
-		int l = co->x-(co->w>>1);
-		int w = co->w;
-		for(t ; t < b ; t++)
-		{
-			memset(&_ggray->source[t][l], 0, sizeof(uchar_d) * w);
-		}
-	}
-
-	// Cascaded classify with PSO
-	cascaded_classify_with_pso(cd, &dinocv_set_rect(0, 0, _ggray->width, _ggray->height),
-		_ggray, ii, n_particles, n_stages);
-	
-
-	result_rt_arr = cd->merged_detection_result->p_rt;
-	for(int j = 0 ; j < cd->merged_detection_result->n_objects ; j++)
-	{
-		// Push this object to candidate list when current object not overlapped with object of tracking list
-		x=((result_rt_arr[j].left + result_rt_arr[j].right)>>1);
-		y=((result_rt_arr[j].top + result_rt_arr[j].bottom)>>1);
-
-		
-		for(int ci = 0 ; ci < cl->cnt ; ci++)
-		{
-			CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)soc_list_get_idx_data(cl, ci);
-			double length = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
-
-			if((int)length < (co->w>>1) )
-				return;
-		}
-
-		for(int ti = 0 ; ti < tl->cnt ; ti++)
-		{
-			TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-			double length = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
-
-			if((int)length < (TO_GET_AVG_W(to)>>1) )
-				return;
-		}
-
-		push_candidate(cl, &result_rt_arr[j]);
-	}
-}
-
-void cascaded_classify_with_tpso(IMAGE_D *img, CASCADED_DETECTOR_D *cd, LIST_D *cl, LIST_D *tl, int n_particles, int n_stages)
-{
-	int **ii = make_integral_image(img);
-
-	candidate_list_update(cd, cl, tl, ii, n_particles, n_stages);
-	tracking_list_update(cd, cl, tl, ii, n_particles, n_stages);
-	candidate_add(cd, cl, tl, ii, n_particles, n_stages);
-
-	_dinocv_free((void **)ii);
-}
-
-void cascaded_classify_with_swo(CASCADED_DETECTOR_D *cd, IMAGE_D *img)
-{
-	int **ii = make_integral_image(img);
-	cascaded_classify(cd, img, ii);
-	_dinocv_free((void **)ii);
-}
 
 
 LRESULT CALLBACK CallbackOnFrame(HWND hWnd, LPVIDEOHDR lpVHdr)
 {
-	RECT_D *result_rt_arr;
-	int result_rt_cnt;
 	for(int i = HEIGHT-1, j=0 ; i >= 0 ; i--, j++)
 	{
 		memcpy(_gimg->source[i], lpVHdr->lpData + (j*WIDTH * 3), sizeof(BYTE)*WIDTH*3);
 	}
-
 	
 	dinocv_conv_24to8_cpy(_gimg, _ggray);
 

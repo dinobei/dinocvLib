@@ -915,7 +915,7 @@ void candidate_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LI
 			if(++co->miss_cnt > CANDIDATE_MISS_MAX)
 			{
 				free((CANDIDATE_OBJECT *)soc_list_del_idx_data(cl, ci));
-				printf("\t - candidate object deleted..(%d)\n", cl->cnt);
+				//printf("\t - candidate object deleted..(%d)\n", cl->cnt);
 			}
 		}
 		else if(co->detection_cnt >= CANDIDATE_CNT_MAX) // send to tracking list (detection_cnt >= CANDIDATE_CNT_MAX)
@@ -938,7 +938,7 @@ void candidate_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LI
 
 			soc_list_add_head(tl, to);
 
-			printf(" + tracking object added..(%d), and current candidate object is (%d)\n", tl->cnt, cl->cnt);
+			//printf(" + tracking object added..(%d), and current candidate object is (%d)\n", tl->cnt, cl->cnt);
 
 		}
 	}
@@ -999,7 +999,7 @@ void tracking_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIS
 			if(++to->miss_cnt > TRACKING_MISS_MAX)
 			{
 				free((TRACKING_OBJECT *)soc_list_del_idx_data(tl, ti));
-				printf(" - tracking object deleted..(%d)\n", tl->cnt);
+				//printf(" - tracking object deleted..(%d)\n", tl->cnt);
 			}
 		}
 	}
@@ -1043,7 +1043,7 @@ void push_candidate(LIST_D *cl, RECT_D *rt)
 	co->h = rt->bottom - rt->top;
 	co->detection_cnt++;
 	soc_list_add_head(cl, (void *)co);
-	printf("\t + candidate object added..(%d)\n", cl->cnt);
+	//printf("\t + candidate object added..(%d)\n", cl->cnt);
 }
 
 void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl, int **ii, int n_particles, int n_stages)
