@@ -24,28 +24,28 @@ LDFLAGS_DBG = -Xlinker -T$(COMPILER_PREFIX)/lib/ae32000-elf2flt.ld
 LDLIBS	= -lm -lc -lpthread
 
 
-LIB_SRCS = dinocore/imgcore.cpp\
-dinocore/bmpanal.cpp\
-dinocore/imgdraw.cpp\
-dinocore/imgconv.cpp\
-dinocore/ppmanal.cpp\
-dinocore/imageio.cpp\
-dinods/ds_sort.cpp\
-dinods/linkedlist.cpp\
-dinods/queue.cpp\
-dinoproc/binarization.cpp\
-dinoproc/dp.cpp\
-dinoproc/filter.cpp\
-dinoproc/cannyedge.cpp\
-dinoproc/chaincode.cpp\
-dinoproc/convexhull.cpp\
-dinoproc/labeling.cpp\
-dinoproc/feature.cpp\
-dinoproc/histogram.cpp\
-dinoproc/morphology.cpp\
-dinoproc/resize.cpp\
-dinoproc/thinning.cpp\
-dinomm/memmgr.cpp
+LIB_SRCS = ../source/dinocore/imgcore.cpp\
+../source/dinocore/bmpanal.cpp\
+../source/dinocore/imgdraw.cpp\
+../source/dinocore/imgconv.cpp\
+../source/dinocore/ppmanal.cpp\
+../source/dinocore/imageio.cpp\
+../source/dinods/ds_sort.cpp\
+../source/dinods/linkedlist.cpp\
+../source/dinods/queue.cpp\
+../source/dinoproc/binarization.cpp\
+../source/dinoproc/dp.cpp\
+../source/dinoproc/filter.cpp\
+../source/dinoproc/cannyedge.cpp\
+../source/dinoproc/chaincode.cpp\
+../source/dinoproc/convexhull.cpp\
+../source/dinoproc/labeling.cpp\
+../source/dinoproc/feature.cpp\
+../source/dinoproc/histogram.cpp\
+../source/dinoproc/morphology.cpp\
+../source/dinoproc/resize.cpp\
+../source/dinoproc/thinning.cpp\
+../source/dinomm/memmgr.cpp
 
 LIB_OBJS = $(LIB_SRCS:.cpp=.o)
 LIB_HDRS = $(LIB_SRCS:.cpp=.h)
