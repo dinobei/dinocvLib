@@ -669,8 +669,8 @@ bool init_swarm(CASCADED_DETECTOR_D *cd, int pos_min_x, int pos_min_y, int pos_m
 	pso_parm->num_stage = num_stage;
 
 	pso_parm->_local_stage = 0;
-	pso_parm->gbestIndex = INT_MAX;
-	pso_parm->gbestScore = DBL_MAX;
+	pso_parm->gbestIndex = 99999;//INT_MAX;
+	pso_parm->gbestScore = 99999;//DBL_MAX;
 
 	for(int i = 0; i < num_particles; i++)
 	{
@@ -678,7 +678,7 @@ bool init_swarm(CASCADED_DETECTOR_D *cd, int pos_min_x, int pos_min_y, int pos_m
 		pso_parm->currentVelocity[i].y = WELLRNG512_limit(-VELOCITY_MAX_Y, VELOCITY_MAX_Y);
 		pso_parm->currentPosition[i].x =  WELLRNG512_limit(pos_min_x, pos_max_x - cd->lut_wsize_consider_sf[sf_idx]-1);
 		pso_parm->currentPosition[i].y = WELLRNG512_limit(pos_min_y, pos_max_y - cd->lut_hsize_consider_sf[sf_idx]-1);
-		pso_parm->pbestScore[i] = DBL_MAX;
+		pso_parm->pbestScore[i] = 99999;//DBL_MAX;
 	}
 
 	return true;
@@ -855,39 +855,23 @@ void CalculatePosition(PSO_PARM_D *pso_parm)
 	}
 }
 
-void DrawParticles(CASCADED_DETECTOR_D *cd, IMAGE_D *img, int sf_idx)
-{
-	PSO_PARM_D *pso_parm = cd->pso_parm;
-	int l,t,r,b;
-
-	int local_width = cd->lut_wsize_consider_sf[sf_idx];
-	int local_height = cd->lut_hsize_consider_sf[sf_idx];
-
-	for(int i = 0; i < cd->pso_parm->num_particles; i++)
-	{
-		l = pso_parm->currentPosition[i].x;
-		t = pso_parm->currentPosition[i].y;
-		r = pso_parm->currentPosition[i].x + local_width;
-		b = pso_parm->currentPosition[i].y + local_height;
-		dinocv_draw_rect(img, &dinocv_set_rect(l,t,r,b), &dinocv_set_color(0,0,255), 1);
-	}
-}
-
 void candidate_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl, int **ii, int n_particles, int n_stages)
 {
 	RECT_D *result_rt_arr;
 	int x, y;
+	RECT_D trt;
 
 	int cc = cl->cnt;
 	for(int ci = cc-1 ; ci >= 0 ; ci--)
 	{
 		// Searching Area with PSO & Renewing data (if exist, miss_cnt++, else detection_cnt++)
 		CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)soc_list_get_idx_data(cl, ci);
-		cascaded_classify_with_pso(cd,
-			&dinocv_set_rect(
+		trt = dinocv_set_rect(
 			(uint_d)d_clp_boundary(co->x-co->w, 0, img->width-1), (uint_d)d_clp_boundary(co->y-co->h, 0, img->height-1),
 			(uint_d)d_clp_boundary(co->x+co->w, 0, img->width-1), (uint_d)d_clp_boundary(co->y+co->h, 0, img->height-1)
-			),
+			);
+		cascaded_classify_with_pso(cd,
+			&trt,
 			img, ii, n_particles, n_stages);
 
 		result_rt_arr = cd->merged_detection_result->p_rt;
@@ -898,8 +882,8 @@ void candidate_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LI
 			x = (result_rt_arr[i].left+result_rt_arr[i].right)>>1;
 			y = (result_rt_arr[i].top+result_rt_arr[i].bottom)>>1;
 
-			double length = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
-			//length = ( d_abs(co->x-x) + d_abs(co->y-y) ) >> 1;
+			double length;// = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
+			length = ( d_abs(co->x-x) + d_abs(co->y-y) ) >> 1;
 			if(length < min_length)
 			{
 				min_length = length;
@@ -949,16 +933,18 @@ void tracking_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIS
 	RECT_D *result_rt_arr = cd->merged_detection_result->p_rt;
 	double min_length;
 	int x, y;
+	RECT_D trt;
 
 	for(int ti = tl->cnt-1 ; ti >= 0 ; ti--)
 	{
 		// Searching Area with PSO & Renewing data (if exist, miss_cnt++, else detection_cnt++)
 		TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-		cascaded_classify_with_pso(cd,
-			&dinocv_set_rect(
+		trt = dinocv_set_rect(
 			d_clp_boundary(TO_GET_AVG_X(to) - TO_GET_AVG_W(to), 0, img->width-1), d_clp_boundary(TO_GET_AVG_Y(to) - TO_GET_AVG_H(to), 0, img->height-1),
 			d_clp_boundary(TO_GET_AVG_X(to) + TO_GET_AVG_W(to), 0, img->width-1), d_clp_boundary(TO_GET_AVG_Y(to) + TO_GET_AVG_H(to), 0, img->height-1)
-			),
+			);
+		cascaded_classify_with_pso(cd,
+			&trt,
 			img, ii, n_particles, n_stages);
 
 		min_length = MAX_TRACKING_LENGTH;
@@ -967,7 +953,8 @@ void tracking_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIS
 			x = (result_rt_arr[i].left + result_rt_arr[i].right)>>1;
 			y = (result_rt_arr[i].top + result_rt_arr[i].bottom)>>1;
 
-			double length = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
+			double length;// = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
+			length = ( d_abs(TO_GET_AVG_X(to)-x) + d_abs(TO_GET_AVG_Y(to)-y) ) >> 1;
 			if(length < min_length)
 			{
 				min_length = length;
@@ -1050,6 +1037,7 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 {
 	RECT_D *result_rt_arr;
 	int x, y;
+	RECT_D trt;
 
 	// Swipe TO Area
 	for(int ti = 0 ; ti < tl->cnt ; ti++)
@@ -1082,7 +1070,8 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 	}
 
 	// Cascaded classify with PSO
-	cascaded_classify_with_pso(cd, &dinocv_set_rect(0, 0, img->width, img->height),
+	trt = dinocv_set_rect(0, 0, img->width, img->height);
+	cascaded_classify_with_pso(cd, &trt,
 		img, ii, n_particles, n_stages);
 	
 
@@ -1097,7 +1086,8 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 		for(int ci = 0 ; ci < cl->cnt ; ci++)
 		{
 			CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)soc_list_get_idx_data(cl, ci);
-			double length = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
+			double length;// = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
+			length = ( d_abs(co->x-x) + d_abs(co->y-y) ) >> 1;
 
 			if((int)length < (co->w>>1) )
 				return;
@@ -1106,7 +1096,8 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 		for(int ti = 0 ; ti < tl->cnt ; ti++)
 		{
 			TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-			double length = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
+			double length;// = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
+			length = ( d_abs(TO_GET_AVG_X(to)-x) + d_abs(TO_GET_AVG_Y(to)-y) ) >> 1;
 
 			if((int)length < (TO_GET_AVG_W(to)>>1) )
 				return;

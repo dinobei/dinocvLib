@@ -1,6 +1,7 @@
 #ifndef __WELL512_H__
 #define __WELL512_H__
 #include <ctime>
+#include <stdlib.h>
 //#include <random>
 
 void INIT_WELL512(void);

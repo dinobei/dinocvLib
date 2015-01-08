@@ -41,7 +41,6 @@ class DWatch
 public:
 	DWatch();
 	virtual ~DWatch();
-
 public:
 	void Start();
 	void End();

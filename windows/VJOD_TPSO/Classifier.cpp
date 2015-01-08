@@ -898,8 +898,8 @@ void candidate_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LI
 			x = (result_rt_arr[i].left+result_rt_arr[i].right)>>1;
 			y = (result_rt_arr[i].top+result_rt_arr[i].bottom)>>1;
 
-			double length = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
-			//length = ( d_abs(co->x-x) + d_abs(co->y-y) ) >> 1;
+			double length;// = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
+			length = ( d_abs(co->x-x) + d_abs(co->y-y) ) >> 1;
 			if(length < min_length)
 			{
 				min_length = length;
@@ -967,7 +967,9 @@ void tracking_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIS
 			x = (result_rt_arr[i].left + result_rt_arr[i].right)>>1;
 			y = (result_rt_arr[i].top + result_rt_arr[i].bottom)>>1;
 
-			double length = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
+			double length;// = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
+			length = ( d_abs(TO_GET_AVG_X(to)-x) + d_abs(TO_GET_AVG_Y(to)-y) ) >> 1;
+
 			if(length < min_length)
 			{
 				min_length = length;
@@ -1097,7 +1099,8 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 		for(int ci = 0 ; ci < cl->cnt ; ci++)
 		{
 			CANDIDATE_OBJECT *co = (CANDIDATE_OBJECT *)soc_list_get_idx_data(cl, ci);
-			double length = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
+			double length;// = sqrt(pow(co->x-x, 2)+pow(co->y-y, 2) );
+			length = ( d_abs(co->x-x) + d_abs(co->y-y) ) >> 1;
 
 			if((int)length < (co->w>>1) )
 				return;
@@ -1106,7 +1109,8 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 		for(int ti = 0 ; ti < tl->cnt ; ti++)
 		{
 			TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-			double length = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
+			double length;// = sqrt(pow(TO_GET_AVG_X(to)-x, 2)+pow(TO_GET_AVG_Y(to)-y, 2) );
+			length = ( d_abs(TO_GET_AVG_X(to)-x) + d_abs(TO_GET_AVG_Y(to)-y) ) >> 1;
 
 			if((int)length < (TO_GET_AVG_W(to)>>1) )
 				return;

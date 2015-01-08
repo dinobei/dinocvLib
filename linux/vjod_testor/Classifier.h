@@ -226,7 +226,6 @@ bool NextStage(CASCADED_DETECTOR_D *cd, int **ii, int sf_idx, DETECTION_RESULT *
 int EvaluatePosition(CASCADED_DETECTOR_D *cd, int **ii, int sf_idx);
 void CalculateVelocity(PSO_PARM_D *pso_parm);
 void CalculatePosition(PSO_PARM_D *pso_parm);
-void DrawParticles(CASCADED_DETECTOR_D *cd, IMAGE_D *img, int sf_idx);
 
 
 
