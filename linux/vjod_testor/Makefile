@@ -1,6 +1,6 @@
 OMPILER_PREFIX=
 CROSS=
-CC=$(CROSS)gcc
+CC=$(CROSS)g++
 ELF2FLT=$(CROSS)elf2flt
 STRIP=$(CROSS)strip
 
