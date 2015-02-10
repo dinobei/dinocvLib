@@ -18,14 +18,14 @@ int main(int argc, char **argv)
 	int nParticles = 4;
 	int nStages = 11;
 	
-	if(argc != 3)
+	if(argc != 4)
 	{
-		printf("Usage : ./%s [image_name] [test time(msec)]\n", argv[0]);
+		printf("Usage : ./%s [image_name] [test time(msec)] [model file name]\n", argv[0]);
 		return -1;
 	}
 	test_time = atoi(argv[2]);
 
-	cd = load_cascaded_detector("cascaded_detector_real4.model", 24, 24,
+	cd = load_cascaded_detector(argv[3], 24, 24,
 		3, 1.25, 25,
 		100000,
 		1, 1);
@@ -122,6 +122,7 @@ int main(int argc, char **argv)
 	}
 	printf("\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rProcessing : %4.0lf %% (num:%d)", (double)100., cd->merged_detection_result->n_objects);
 
+	/*
 	img = dinocv_load_image(argv[1], NULL, 0, IMGMDL_RGB);
 	for(i = 0 ; i < cd->merged_detection_result->n_objects ; i++)
 	{
@@ -129,6 +130,7 @@ int main(int argc, char **argv)
 	}
 	dinocv_save_bitmap("swo_result.bmp", img);
 	dinocv_release_image(img);
+	*/
 	printf("\t[Complete]\nAverage time : %5.3lf msec, %5.3lf fps\n", total_time/total_cnt, 1000./(total_time/total_cnt));
 
 
