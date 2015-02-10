@@ -3,6 +3,7 @@
 #include <time.h>
 #include "well512.h"
 #include "list.h"
+#include "dinotime.h"
 using namespace std;
 
 // Default General Parameters
@@ -11,9 +12,9 @@ using namespace std;
 #define SCALE_FACTOR				1.25
 
 // PSO Parameters
-#define VELOCITY_MAX_X				50
-#define VELOCITY_MAX_Y				50
-#define INERTIA_COEFFICIENT			0.6
+#define VELOCITY_MAX_X				5//50
+#define VELOCITY_MAX_Y				5//50
+#define INERTIA_COEFFICIENT			0.3//0.6
 #define PARTICLE_COEFFICIENT		1.7
 #define SWARM_COEFFICIENT			1.7
 

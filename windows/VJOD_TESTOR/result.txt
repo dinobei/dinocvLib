@@ -1,0 +1,26 @@
+
+
+nParticles : 1
+nStages : 1
+TPSO Scanning Performance Test
+Processing :  100 % (tl:0)	[Complete]
+Average time : 1.610 msec, 620.952 fps
+
+
+nParticles : 1
+nStages : 2
+TPSO Scanning Performance Test
+Processing :  100 % (tl:0)	[Complete]
+Average time : 1.591 msec, 628.435 fps
+
+
+nParticles : 1
+nStages : 3
+TPSO Scanning Performance Test
+Processing :  100 % (tl:0)	[Complete]
+Average time : 1.599 msec, 625.527 fps
+
+
+nParticles : 1
+nStages : 4
+TPSO Scanning Performance Test

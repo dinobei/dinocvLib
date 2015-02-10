@@ -892,7 +892,7 @@ void candidate_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LI
 
 		result_rt_arr = cd->merged_detection_result->p_rt;
 
-		double min_length = MAX_TRACKING_LENGTH;
+		double min_length = (co->w>>2);
 		for(int i = 0 ; i < cd->merged_detection_result->n_objects ; i++)
 		{
 			x = (result_rt_arr[i].left+result_rt_arr[i].right)>>1;
@@ -910,7 +910,7 @@ void candidate_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LI
 				co->detection_cnt++;
 			}
 		}
-		if(min_length >= MAX_TRACKING_LENGTH)
+		if(min_length >= (co->w>>2) )//MAX_TRACKING_LENGTH)
 		{
 			if(++co->miss_cnt > CANDIDATE_MISS_MAX)
 			{
@@ -934,6 +934,9 @@ void candidate_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LI
 			to->len_division_cnt=1;
 			to->pos_division_cnt=1;
 
+			to->cur_x = co->x;
+			to->cur_y = co->y;
+
 			free(co);
 
 			soc_list_add_head(tl, to);
@@ -941,7 +944,11 @@ void candidate_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LI
 			//printf(" + tracking object added..(%d), and current candidate object is (%d)\n", tl->cnt, cl->cnt);
 
 		}
+		
 	}
+
+	
+
 }
 
 void tracking_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl, int **ii, int n_particles, int n_stages)
@@ -961,7 +968,7 @@ void tracking_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIS
 			),
 			img, ii, n_particles, n_stages);
 
-		min_length = MAX_TRACKING_LENGTH;
+		min_length = (TO_GET_AVG_W(to)>>2);
 		for(int i = 0 ; i < cd->merged_detection_result->n_objects ; i++)
 		{
 			x = (result_rt_arr[i].left + result_rt_arr[i].right)>>1;
@@ -994,7 +1001,7 @@ void tracking_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIS
 				to->cur_y = y;
 			}
 		}
-		if(min_length == MAX_TRACKING_LENGTH)
+		if(min_length >= (TO_GET_AVG_W(to)>>2))
 		{
 			if(++to->miss_cnt > TRACKING_MISS_MAX)
 			{
@@ -1004,6 +1011,13 @@ void tracking_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIS
 		}
 	}
 
+	for(int ti = tl->cnt-1 ; ti >= 0 ; ti--)
+	{
+		TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
+		if(to->cur_x < 0)
+			free((TRACKING_OBJECT *)soc_list_del_idx_data(tl, ti));
+	}
+
 	for(int ti = 0 ; ti < tl->cnt-1 ; ti++)
 	{
 		for(int ti2 = ti+1 ; ti2 < tl->cnt ; ti2++)
@@ -1011,26 +1025,17 @@ void tracking_list_update(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIS
 			if(ti != ti2)
 			{
 				TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-				if(to->cur_x > 0)
-				{
-					TRACKING_OBJECT *to2 = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti2);
+				TRACKING_OBJECT *to2 = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti2);
 
-					if(to2->cur_x > 0 &&
-						d_limit_cc(to->cur_x / to2->cur_x, 0.8, 1.2) &&
-						d_limit_cc(to->cur_y / to2->cur_y, 0.8, 1.2))
-					{
-						to2->cur_x = -1;
-					}
+				if(	d_limit_cc(to->cur_x / to2->cur_x, 0.9, 1.1) &&
+					d_limit_cc(to->cur_y / to2->cur_y, 0.9, 1.1))
+				{
+					to2->cur_x = -1;
 				}
 			}
 		}
 	}
-	for(int ti = tl->cnt-1 ; ti >= 0 ; ti--)
-	{
-		TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, ti);
-		if(to->cur_x < 0)
-			free((TRACKING_OBJECT *)soc_list_del_idx_data(tl, ti));
-	}
+	
 }
 void push_candidate(LIST_D *cl, RECT_D *rt)
 {
@@ -1061,6 +1066,12 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 		int w = (uint_d)(TO_GET_AVG_W(to));
 		if(t < 0) t = 0;
 		if(b > img->height) b = img->height;
+
+		int offset = w>>2;
+		t+=offset;
+		b-=offset;
+		l+=offset;
+		w=(offset<<1);
 		for(t ; t < b ; t++)
 		{
 			memset(&img->source[t][l], 0, sizeof(uchar_d) * w);
@@ -1075,6 +1086,12 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 		int b = co->y+(co->h>>1);
 		int l = co->x-(co->w>>1);
 		int w = co->w;
+
+		int offset = w>>2;
+		t+=offset;
+		b-=offset;
+		l+=offset;
+		w=(offset<<1);
 		for(t ; t < b ; t++)
 		{
 			memset(&img->source[t][l], 0, sizeof(uchar_d) * w);
@@ -1082,9 +1099,10 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 	}
 
 	// Cascaded classify with PSO
+	//n_particles <<= 2;
 	cascaded_classify_with_pso(cd, &dinocv_set_rect(0, 0, img->width, img->height),
 		img, ii, n_particles, n_stages);
-	
+	//n_particles >>= 2;
 
 	result_rt_arr = cd->merged_detection_result->p_rt;
 	for(int j = 0 ; j < cd->merged_detection_result->n_objects ; j++)
@@ -1119,12 +1137,25 @@ void candidate_add(CASCADED_DETECTOR_D *cd, IMAGE_D *img, LIST_D *cl, LIST_D *tl
 void cascaded_classify_with_tpso(IMAGE_D *img, CASCADED_DETECTOR_D *cd, LIST_D *cl, LIST_D *tl, int n_particles, int n_stages)
 {
 	int **ii = make_integral_image(img);
-
+	//DWatch watch;
+	//watch.Start();
 	candidate_list_update(cd, img, cl, tl, ii, n_particles, n_stages);
-	tracking_list_update(cd, img, cl, tl, ii, n_particles, n_stages);
-	candidate_add(cd, img, cl, tl, ii, n_particles, n_stages);
+	//watch.End();
+	//printf("\n%lf\n", watch.GetDurationMilliSecond());
 
+	//watch.Start();
+	tracking_list_update(cd, img, cl, tl, ii, n_particles, n_stages);
+	//watch.End();
+	//printf("%lf\n", watch.GetDurationMilliSecond());
+
+	//watch.Start();
+	candidate_add(cd, img, cl, tl, ii, n_particles, n_stages);
+	//watch.End();
+	//printf("%lf\n", watch.GetDurationMilliSecond());
+	
 	_dinocv_free((void **)ii);
+
+	//printf("\n\n");
 }
 
 void cascaded_classify_with_swo(CASCADED_DETECTOR_D *cd, IMAGE_D *img)

@@ -1,3 +1,5 @@
+// This code is for speed test of each SoC Board
+
 #include <stdio.h>
 #include "../../source/dinocvlib.h"
 #include "dinotime.h"
@@ -73,7 +75,25 @@ int main(int argc, char **argv)
 
 		total_time += watch.GetDurationMilliSecond();
 		total_cnt++;
-		
+		/*
+		for(i = 0 ; i < tl->cnt ; i++)
+		{
+			TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, i);
+			int x = TO_GET_AVG_X(to);
+			int y = TO_GET_AVG_Y(to);
+			int w = TO_GET_AVG_W(to);
+			int h = TO_GET_AVG_H(to);
+			dinocv_draw_rect(img,
+				&dinocv_set_rect(
+				x-(w>>1),
+				y-(h>>1),
+				x+(w>>1),
+				y+(h>>1)
+				),
+				&dinocv_set_color(255, 0, 0), 5);
+		}
+		dinocv_save_bitmap("tpso_result.bmp", img);
+		*/
 		dinocv_release_image(img);
 
 		if(total_time >= test_time)
@@ -81,7 +101,27 @@ int main(int argc, char **argv)
 	}
 	printf("\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rProcessing : %4.0lf %% (tl:%d)", (double)100., tl->cnt);
 
-
+	/*
+	img = dinocv_load_image(argv[1], NULL, 0, IMGMDL_RGB);
+	for(i = 0 ; i < tl->cnt ; i++)
+	{
+		TRACKING_OBJECT *to = (TRACKING_OBJECT *)soc_list_get_idx_data(tl, i);
+		int x = TO_GET_AVG_X(to);
+		int y = TO_GET_AVG_Y(to);
+		int w = TO_GET_AVG_W(to);
+		int h = TO_GET_AVG_H(to);
+		dinocv_draw_rect(img,
+			&dinocv_set_rect(
+			x-(w>>1),
+			y-(h>>1),
+			x+(w>>1),
+			y+(h>>1)
+			),
+			&dinocv_set_color(255, 0, 0), 5);
+	}
+	dinocv_save_bitmap("tpso_result.bmp", img);
+	dinocv_release_image(img);
+	*/
 	printf("\t[Complete]\nAverage time : %5.3lf msec, %5.3lf fps\n", total_time/total_cnt, 1000./(total_time/total_cnt));
 
 
