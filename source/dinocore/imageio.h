@@ -1,7 +1,6 @@
 #ifndef __IMAGEIO_H__
 #define __IMAGEIO_H__
 #include "../common/def_os_selector_header.h"
-#include "imgcore.h"
 #include "bmpanal.h"
 #include "ppmanal.h"
 #include "yuv422anal.h"

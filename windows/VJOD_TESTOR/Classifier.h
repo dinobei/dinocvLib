@@ -1,4 +1,4 @@
-#include <dinocvlib.h>
+#include <dinocore.h>
 #include <cmath>
 #include <time.h>
 #include "well512.h"

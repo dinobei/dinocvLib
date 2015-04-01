@@ -1,7 +1,7 @@
 // This code is for speed test of each SoC Board
 
 #include <stdio.h>
-#include "../../source/dinocvlib.h"
+#include <dinocore.h>
 #include "dinotime.h"
 #include "Classifier.h"
 #include "list.h"

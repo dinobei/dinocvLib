@@ -3,7 +3,7 @@
 #include "../common/def_os_selector_header.h"
 #include "../dinocore/imgcore.h"
 
-#include "../dinocore/imageio.h"//tmp
+//#include "../dinocore/imageio.h"//tmp
 
 #define DIR_EXTERNAL	0
 #define DIR_INTERNAL	1

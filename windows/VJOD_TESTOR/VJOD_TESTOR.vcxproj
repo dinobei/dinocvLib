@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\byeongju\Documents\GitHub\dinocvLib\source\common;C:\Users\byeongju\Documents\GitHub\dinocvLib\source\dinocore;C:\Users\byeongju\Documents\GitHub\dinocvLib\source\dinods;C:\Users\byeongju\Documents\GitHub\dinocvLib\source\dinomm;C:\Users\byeongju\Documents\GitHub\dinocvLib\source\dinoproc;C:\Users\byeongju\Documents\GitHub\dinocvLib\source;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\byeongju\Documents\GitHub\dinocvLib\windows\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>Y:\Users\pbj\GitHub\dinocvLib\windows\output</LibraryPath>
+    <IncludePath>Y:\Users\pbj\GitHub\dinocvLib\source\common;Y:\Users\pbj\GitHub\dinocvLib\source\dinocore;Y:\Users\pbj\GitHub\dinocvLib\source\dinoproc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\byeongju\Documents\GitHub\dinocvLib\source\common;C:\Users\byeongju\Documents\GitHub\dinocvLib\source\dinocore;C:\Users\byeongju\Documents\GitHub\dinocvLib\source\dinods;C:\Users\byeongju\Documents\GitHub\dinocvLib\source\dinomm;C:\Users\byeongju\Documents\GitHub\dinocvLib\source\dinoproc;C:\Users\byeongju\Documents\GitHub\dinocvLib\source;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\byeongju\Documents\GitHub\dinocvLib\windows\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>Y:\Users\pbj\GitHub\dinocvLib\windows\output</LibraryPath>
+    <IncludePath>Y:\Users\pbj\GitHub\dinocvLib\source\common;Y:\Users\pbj\GitHub\dinocvLib\source\dinocore;Y:\Users\pbj\GitHub\dinocvLib\source\dinoproc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -61,7 +61,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dinocvLib_100d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dinocore_100d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,7 +80,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>dinocvLib_100.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dinocore_100.lib;dinoproc_100.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -88,10 +88,10 @@
     <ClCompile Include="dinotime.cpp" />
     <ClCompile Include="list.cpp" />
     <ClCompile Include="main.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main2.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="well512.cpp" />
   </ItemGroup>

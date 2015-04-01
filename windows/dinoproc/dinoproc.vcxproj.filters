@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\source\dinoproc\binarization.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\cannyedge.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\chaincode.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\convexhull.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\dp.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\feature.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\filter.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\histogram.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\labeling.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\morphology.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\thinning.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\dinoproc\binarization.h" />
+    <ClInclude Include="..\..\source\dinoproc\cannyedge.h" />
+    <ClInclude Include="..\..\source\dinoproc\chaincode.h" />
+    <ClInclude Include="..\..\source\dinoproc\convexhull.h" />
+    <ClInclude Include="..\..\source\dinoproc\dp.h" />
+    <ClInclude Include="..\..\source\dinoproc\feature.h" />
+    <ClInclude Include="..\..\source\dinoproc\filter.h" />
+    <ClInclude Include="..\..\source\dinoproc\histogram.h" />
+    <ClInclude Include="..\..\source\dinoproc\labeling.h" />
+    <ClInclude Include="..\..\source\dinoproc\morphology.h" />
+    <ClInclude Include="..\..\source\dinoproc\thinning.h" />
+  </ItemGroup>
+</Project>

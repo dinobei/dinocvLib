@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{5294f97c-c02d-439f-9f94-1b94d73601cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="miscellaneous">
+      <UniqueIdentifier>{05445c01-4a39-441b-a9c8-5e20f4e9667a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="format analysis">
+      <UniqueIdentifier>{317d219f-32c4-4f1f-a219-f24f9c05377f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data structure">
+      <UniqueIdentifier>{01d1f2ee-4602-4631-af4e-d033d75a76ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{079eaae0-7af2-4428-a0d7-e64233a1b2ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="image i/o warpper">
+      <UniqueIdentifier>{5c8e22d3-56eb-447d-a949-da0c0f83c25a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\common\def_os_selector_export.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\common\def_os_selector_header.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\common\dinocore.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\ds_sort.h">
+      <Filter>data structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\linkedlist.h">
+      <Filter>data structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\queue.h">
+      <Filter>data structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\imgconv.h">
+      <Filter>miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\imgdraw.h">
+      <Filter>miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\imgresize.h">
+      <Filter>miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\bmpanal.h">
+      <Filter>format analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\ppmanal.h">
+      <Filter>format analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\yuv422anal.h">
+      <Filter>format analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\imgcore.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\memmgr.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\imageio.h">
+      <Filter>image i/o warpper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\well512.h">
+      <Filter>miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\cwatch.h">
+      <Filter>miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\dinocore\watchWrapper.h">
+      <Filter>miscellaneous</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\dinocore\ds_sort.cpp">
+      <Filter>data structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\linkedlist.cpp">
+      <Filter>data structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\queue.cpp">
+      <Filter>data structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\imgconv.cpp">
+      <Filter>miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\imgdraw.cpp">
+      <Filter>miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\imgresize.cpp">
+      <Filter>miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\bmpanal.cpp">
+      <Filter>format analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\ppmanal.cpp">
+      <Filter>format analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\yuv422anal.cpp">
+      <Filter>format analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\imgcore.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\memmgr.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\imageio.cpp">
+      <Filter>image i/o warpper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\well512.cpp">
+      <Filter>miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\watchWrapper.cpp">
+      <Filter>miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\dinocore\cwatch.cpp">
+      <Filter>miscellaneous</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

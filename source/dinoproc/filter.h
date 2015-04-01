@@ -2,7 +2,7 @@
 #define __FILTER_H__
 #include "../common/def_os_selector_header.h"
 #include "../dinocore/imgcore.h"
-#include "../dinods/ds_sort.h"
+#include "../dinocore/ds_sort.h"
 
 #ifdef __cplusplus
 extern "C"

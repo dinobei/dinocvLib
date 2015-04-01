@@ -1,7 +1,7 @@
 // This code is for Graph of Speed & Correct Rate
 
 #include <stdio.h>
-#include "../../source/dinocvlib.h"
+#include <dinocore.h>
 #include "dinotime.h"
 #include "Classifier.h"
 #include "list.h"

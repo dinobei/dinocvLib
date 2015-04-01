@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "main", "main\main.vcxproj", "{AFB3B1CB-F902-48DE-9605-88EFB5B69D16}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EEB30549-1335-40AE-9884-16FEDB1B21EA} = {EEB30549-1335-40AE-9884-16FEDB1B21EA}
+		{C87C13D2-93FE-4B5E-9D81-EDDDDC98F7B2} = {C87C13D2-93FE-4B5E-9D81-EDDDDC98F7B2}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dinocore", "dinocore\dinocore.vcxproj", "{EEB30549-1335-40AE-9884-16FEDB1B21EA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dinoproc", "dinoproc\dinoproc.vcxproj", "{C87C13D2-93FE-4B5E-9D81-EDDDDC98F7B2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VJOD_SPEED_TESTOR", "VJOD_SPEED_TESTOR\VJOD_SPEED_TESTOR.vcxproj", "{824A0CBE-4A69-41DC-9013-26F98FA96AD3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFB3B1CB-F902-48DE-9605-88EFB5B69D16}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AFB3B1CB-F902-48DE-9605-88EFB5B69D16}.Debug|Win32.Build.0 = Debug|Win32
+		{AFB3B1CB-F902-48DE-9605-88EFB5B69D16}.Release|Win32.ActiveCfg = Release|Win32
+		{AFB3B1CB-F902-48DE-9605-88EFB5B69D16}.Release|Win32.Build.0 = Release|Win32
+		{EEB30549-1335-40AE-9884-16FEDB1B21EA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EEB30549-1335-40AE-9884-16FEDB1B21EA}.Debug|Win32.Build.0 = Debug|Win32
+		{EEB30549-1335-40AE-9884-16FEDB1B21EA}.Release|Win32.ActiveCfg = Release|Win32
+		{EEB30549-1335-40AE-9884-16FEDB1B21EA}.Release|Win32.Build.0 = Release|Win32
+		{C87C13D2-93FE-4B5E-9D81-EDDDDC98F7B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C87C13D2-93FE-4B5E-9D81-EDDDDC98F7B2}.Debug|Win32.Build.0 = Debug|Win32
+		{C87C13D2-93FE-4B5E-9D81-EDDDDC98F7B2}.Release|Win32.ActiveCfg = Release|Win32
+		{C87C13D2-93FE-4B5E-9D81-EDDDDC98F7B2}.Release|Win32.Build.0 = Release|Win32
+		{824A0CBE-4A69-41DC-9013-26F98FA96AD3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{824A0CBE-4A69-41DC-9013-26F98FA96AD3}.Debug|Win32.Build.0 = Debug|Win32
+		{824A0CBE-4A69-41DC-9013-26F98FA96AD3}.Release|Win32.ActiveCfg = Release|Win32
+		{824A0CBE-4A69-41DC-9013-26F98FA96AD3}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
