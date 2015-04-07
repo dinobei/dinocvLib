@@ -12,6 +12,7 @@
     <ClCompile Include="..\..\source\dinoproc\labeling.cpp" />
     <ClCompile Include="..\..\source\dinoproc\morphology.cpp" />
     <ClCompile Include="..\..\source\dinoproc\thinning.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\lookuptables.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\dinoproc\binarization.h" />
@@ -25,5 +26,7 @@
     <ClInclude Include="..\..\source\dinoproc\labeling.h" />
     <ClInclude Include="..\..\source\dinoproc\morphology.h" />
     <ClInclude Include="..\..\source\dinoproc\thinning.h" />
+    <ClInclude Include="..\..\source\dinoproc\lookuptables.h" />
+    <ClInclude Include="..\..\source\common\dinoproc.h" />
   </ItemGroup>
 </Project>

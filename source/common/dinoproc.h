@@ -9,3 +9,4 @@
 #include "../dinoproc/labeling.h"
 #include "../dinoproc/morphology.h"
 #include "../dinoproc/thinning.h"
+#include "../dinoproc/lookuptables.h"

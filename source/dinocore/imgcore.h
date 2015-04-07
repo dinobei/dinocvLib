@@ -269,6 +269,25 @@ extern "C" DINOBEI_DLLTYPE
 #endif
 	uint_d dinocv_get_height(IMAGE_D *image);
 
+/*
+ * [함수명]
+ *		dinocv_get_size()
+ * [함수 설명]
+ *		영상의 가로, 세로 크기를 가져온다. ROI 필드가 NULL일 경우, image 구조체의 width, height와 같다.
+ * [파라미터]
+ *		image		: 메모리 내에 생성되어있는 IMAGE_D 구조체의 포인터
+ *						ex) x
+ * [리턴 타입]
+ *		SIZE_D 구조체
+ * [사용 예시]
+ *		SIZE_D sz = dinocv_get_size(img);
+ *
+ */
+#if defined(_WIN32)
+extern "C" DINOBEI_DLLTYPE
+#endif
+	SIZE_D dinocv_get_size(IMAGE_D *image);
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -349,7 +368,7 @@ extern "C" DINOBEI_DLLTYPE
 
 /*
  * [함수명]
- *		_dinocv_create_image()
+ *		dinocv_create_image()
  * [함수 설명]
  *		파라미터를 참조하여 IMAGE_D * 형태의 이미지 구조체를 초기 값으로 할당하여 리턴한다.
  * [파라미터]
@@ -370,7 +389,24 @@ extern "C" DINOBEI_DLLTYPE
 #endif
 	IMAGE_D* dinocv_create_image(SIZE_D *size, const ushort_d bpp);
 
-
+/*
+ * [함수명]
+ *		dinocv_create_image_by_image()
+ * [함수 설명]
+ *		IMAGE_D 구조체를 참조하여 동일한 크기, bpp의 이미지 구조체를 초기 값으로 할당하여 리턴한다.
+ * [파라미터]
+ *		org_img		: 생성하려는 이미지와 동일한 크기의 이미지
+ *
+ * [리턴 타입]
+ *		IMAGE_D *	: IMAGE_D 구조체의 포인터형으로 동적할당하여 리턴한다.
+ * [사용 예시]
+ *		IMAGE_D *new_img = dinocv_create_image_by_image(org_img);
+ *
+ */
+#if defined(_WIN32)
+extern "C" DINOBEI_DLLTYPE
+#endif
+	IMAGE_D* dinocv_create_image_by_image(IMAGE_D *org_img);
 
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// IMAGE INITIALIZE //////////////////////////////////

@@ -64,6 +64,15 @@ uint_d dinocv_get_height(IMAGE_D *image)
 	return image->height;
 }
 
+SIZE_D dinocv_get_size(IMAGE_D *image)
+{
+	SIZE_D sz;
+	sz.width = dinocv_get_width(image);
+	sz.height = dinocv_get_height(image);
+
+	return sz;
+}
+
 void** _dinocv_malloc(const enum SZ_TYPE sz_type, const uint_d width, const uint_d height, const ushort_d bpp)
 {
 	register unsigned int i, adt=0;
@@ -113,7 +122,7 @@ void dinocv_memset(IMAGE_D *img)
 
 IMAGE_D* dinocv_create_image(SIZE_D *size, const ushort_d bpp)
 {
-	IMAGE_D *ret_buf = (IMAGE_D *)malloc(sizeof(IMAGE_D));
+	IMAGE_D *ret_buf;
 
 	// error check
 	if(	size->width <= 0 ||
@@ -122,12 +131,35 @@ IMAGE_D* dinocv_create_image(SIZE_D *size, const ushort_d bpp)
 		return NULL;
 	}
 
+	ret_buf = (IMAGE_D *)malloc(sizeof(IMAGE_D));
+
 	// initialize image
 	_dinocv_init_image(ret_buf, size, bpp);
 
 	// allocation source memory
 	ret_buf->source = (uchar_d **)_dinocv_new(SZ_BYTE, size->width, size->height, bpp);
 	
+	return ret_buf;
+}
+
+IMAGE_D* dinocv_create_image_by_image(IMAGE_D *org_img)
+{
+	IMAGE_D *ret_buf;
+	SIZE_D size;
+
+	if(org_img == NULL)
+	{
+		return NULL;
+	}
+	size = dinocv_get_size(org_img);
+	ret_buf = (IMAGE_D *)malloc(sizeof(IMAGE_D));
+
+	// initialize image
+	_dinocv_init_image(ret_buf, &size, org_img->bpp);
+
+	// allocation source memory
+	ret_buf->source = (uchar_d **)_dinocv_new(SZ_BYTE, size.width, size.height, org_img->bpp);
+
 	return ret_buf;
 }
 

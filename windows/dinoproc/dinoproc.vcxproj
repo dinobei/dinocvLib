@@ -20,10 +20,12 @@
     <ClCompile Include="..\..\source\dinoproc\filter.cpp" />
     <ClCompile Include="..\..\source\dinoproc\histogram.cpp" />
     <ClCompile Include="..\..\source\dinoproc\labeling.cpp" />
+    <ClCompile Include="..\..\source\dinoproc\lookuptables.cpp" />
     <ClCompile Include="..\..\source\dinoproc\morphology.cpp" />
     <ClCompile Include="..\..\source\dinoproc\thinning.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\source\common\dinoproc.h" />
     <ClInclude Include="..\..\source\dinoproc\binarization.h" />
     <ClInclude Include="..\..\source\dinoproc\cannyedge.h" />
     <ClInclude Include="..\..\source\dinoproc\chaincode.h" />
@@ -33,6 +35,7 @@
     <ClInclude Include="..\..\source\dinoproc\filter.h" />
     <ClInclude Include="..\..\source\dinoproc\histogram.h" />
     <ClInclude Include="..\..\source\dinoproc\labeling.h" />
+    <ClInclude Include="..\..\source\dinoproc\lookuptables.h" />
     <ClInclude Include="..\..\source\dinoproc\morphology.h" />
     <ClInclude Include="..\..\source\dinoproc\thinning.h" />
   </ItemGroup>
