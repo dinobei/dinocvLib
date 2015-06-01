@@ -1,6 +1,6 @@
 #ifndef __IMGCORE_H__
 #define __IMGCORE_H__
-#include "../common/def_os_selector_header.h"
+#include "def_os_selector_header.h"
 #include "linkedlist.h"
 #include "ds_sort.h"
 #include "queue.h"

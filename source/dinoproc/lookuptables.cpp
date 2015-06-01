@@ -3,7 +3,7 @@
 
 IMAGE_D *dinocv_lut_proc(IMAGE_D *image)
 {
-	register int i, j;
+	register unsigned int i, j;
 	int sum;
 	IMAGE_D *ret_image;
 	uchar_d **source, **ret_source;

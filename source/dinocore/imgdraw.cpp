@@ -535,9 +535,9 @@ void dinocv_draw_fill_polygon(IMAGE_D *img_polygon, POINT_D2 *pt_array, uint_d n
 	// Draw Contour
 	for(i = 0 ; i < num-1 ; i++)
 	{
-		dinocv_draw_line(img_polygon, pt_array[i], pt_array[i+1], clr);
+		line_fast_truclr(img_polygon, pt_array[i][0], pt_array[i][1], pt_array[i+1][0],  pt_array[i+1][1], clr);
 	}
-	dinocv_draw_line(img_polygon, pt_array[num-1], pt_array[0], clr);
+	line_fast_truclr(img_polygon, pt_array[num-1][0], pt_array[num-1][1], pt_array[0][0],  pt_array[0][1], clr);
 	
 	// Fill Within The Polygon Pixel
 	for(i = 1 ; i < img_polygon->height-1 ; i++)
@@ -551,5 +551,120 @@ void dinocv_draw_fill_polygon(IMAGE_D *img_polygon, POINT_D2 *pt_array, uint_d n
 			}
 		}
 	}
+
+}
+
+void line_fast_gray(IMAGE_D *img, int x1, int y1, int x2, int y2, int color)
+{
+  int i,dx,dy,sdx,sdy,dxabs,dyabs,x,y,px,py;
+
+  dx=x2-x1;      /* the horizontal distance of the line */
+  dy=y2-y1;      /* the vertical distance of the line */
+  dxabs=abs(dx);
+  dyabs=abs(dy);
+  sdx=sgn(dx);
+  sdy=sgn(dy);
+  x=dyabs>>1;
+  y=dxabs>>1;
+  px=x1;
+  py=y1;
+
+  if (dxabs>=dyabs) /* the line is more horizontal than vertical */
+  {
+    for(i=0;i<dxabs;i++)
+    {
+      y+=dyabs;
+      if (y>=dxabs)
+      {
+        y-=dxabs;
+        py+=sdy;
+      }
+      px+=sdx;
+      //plot_pixel(px,py,color);
+	  img->source[py][px] = color;
+    }
+  }
+  else /* the line is more vertical than horizontal */
+  {
+    for(i=0;i<dyabs;i++)
+    {
+      x+=dxabs;
+      if (x>=dyabs)
+      {
+        x-=dyabs;
+        px+=sdx;
+      }
+      py+=sdy;
+      //plot_pixel(px,py,color);
+	  img->source[py][px] = color;
+    }
+  }
+}
+
+
+void line_fast_truclr(IMAGE_D *img, int x1, int y1, int x2, int y2, COLOR_D *color)
+{
+  int i,dx,dy,sdx,sdy,dxabs,dyabs,x,y,px,py;
+
+  dx=x2-x1;      /* the horizontal distance of the line */
+  dy=y2-y1;      /* the vertical distance of the line */
+  dxabs=abs(dx);
+  dyabs=abs(dy);
+  sdx=sgn(dx);
+  sdy=sgn(dy);
+  x=dyabs>>1;
+  y=dxabs>>1;
+  px=x1;
+  py=y1;
+
+  //VGA[(py<<8)+(py<<6)+px]=color;
+
+  if (dxabs>=dyabs) /* the line is more horizontal than vertical */
+  {
+    for(i=0;i<dxabs;i++)
+    {
+      y+=dyabs;
+      if (y>=dxabs)
+      {
+        y-=dxabs;
+        py+=sdy;
+      }
+      px+=sdx;
+	  if(px>=0 && py>=0 && px < (int)img->width && py < (int)img->height)
+	  {
+			img->source[py][px*3+0] = color->r;
+			img->source[py][px*3+1] = color->g;
+			img->source[py][px*3+2] = color->b;
+	  }
+    }
+  }
+  else /* the line is more vertical than horizontal */
+  {
+    for(i=0;i<dyabs;i++)
+    {
+      x+=dxabs;
+      if (x>=dyabs)
+      {
+        x-=dyabs;
+        px+=sdx;
+      }
+      py+=sdy;
+      if(px>=0 && py>=0 && px < (int)img->width && py < (int)img->height)
+	  {
+			img->source[py][px*3+0] = color->r;
+			img->source[py][px*3+1] = color->g;
+			img->source[py][px*3+2] = color->b;
+	  }
+    }
+  }
+}
+
+void dinocv_draw_polygon(IMAGE_D *img, POINT_D2 *pt_array, int num, COLOR_D *clr){
+	register int i;
+	for(i = 0 ; i < num-1 ; i++)
+	{
+		line_fast_truclr(img, pt_array[i][0], pt_array[i][1], pt_array[i+1][0],  pt_array[i+1][1], clr);
+	}
+	line_fast_truclr(img, pt_array[num-1][0], pt_array[num-1][1], pt_array[0][0],  pt_array[0][1], clr);
 
 }

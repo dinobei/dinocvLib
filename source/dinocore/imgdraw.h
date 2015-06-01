@@ -3,6 +3,9 @@
 #include "../common/def_os_selector_header.h"
 #include "imgcore.h"
 
+#define sgn(x) ((x<0)?-1:((x>0)?1:0)) /* macro to return the sign of a
+                                         number */
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -74,6 +77,21 @@ extern "C" DINOBEI_DLLTYPE
 extern "C" DINOBEI_DLLTYPE
 #endif
 	void dinocv_draw_fill_polygon(IMAGE_D *img_polygon, POINT_D2 *pt_array, uint_d num, COLOR_D *clr);
+
+#if defined(_WIN32)
+extern "C" DINOBEI_DLLTYPE
+#endif
+void line_fast_gray(IMAGE_D *img, int x1, int y1, int x2, int y2, int color);
+
+#if defined(_WIN32)
+extern "C" DINOBEI_DLLTYPE
+#endif
+void line_fast_truclr(IMAGE_D *img, int x1, int y1, int x2, int y2, COLOR_D *color);
+
+#if defined(_WIN32)
+extern "C" DINOBEI_DLLTYPE
+#endif
+void dinocv_draw_polygon(IMAGE_D *img, POINT_D2 *pt_array, int num, COLOR_D *clr);
 
 #ifdef __cplusplus
 }
